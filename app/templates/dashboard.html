@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SentinelEDR</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+body{background:#070b11;color:#e5e7eb}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#0c1118;border-right:1px solid #202938;padding:25px}
+.logo{font-size:22px;font-weight:bold;margin-bottom:35px}
+.logo span{color:#22c55e}
+.nav div{padding:13px;color:#8793a3;margin:5px 0;border-radius:6px}
+.nav .active{background:#18212d;color:white}
+.main{flex:1;padding:28px}
+.header{display:flex;justify-content:space-between;margin-bottom:25px}
+.header h1{font-size:28px}
+.online{color:#22c55e}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.card,.panel{background:#0c1118;border:1px solid #202938;border-radius:9px;padding:20px}
+.label{font-size:11px;color:#7f8a99;margin-bottom:10px}
+.value{font-size:28px;font-weight:bold}
+.content{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel h2{font-size:18px;margin-bottom:15px}
+button{background:#2563eb;color:white;border:0;padding:11px 17px;border-radius:6px;cursor:pointer}
+button:hover{background:#1d4ed8}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #18212b}
+th{color:#7f8a99}
+.green{color:#22c55e}
+.red{color:#ef4444}
+.blue{color:#60a5fa}
+#activity{margin-top:15px;color:#9ca3af;font-size:13px}
+@media(max-width:900px){
+.sidebar{display:none}
+.cards,.content{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+<div class="logo">🛡 Sentinel<span>EDR</span></div>
+
+<div class="nav">
+<div class="active">Dashboard</div>
+<div>Processes</div>
+<div>Network</div>
+<div>Alerts</div>
+<div>Scans</div>
+<div>API</div>
+</div>
+</aside>
+
+<main class="main">
+
+<div class="header">
+<h1>Endpoint Security</h1>
+<div class="online">● SYSTEM ONLINE</div>
+</div>
+
+<div class="cards">
+
+<div class="card">
+<div class="label">PROCESSES</div>
+<div class="value" id="processes">—</div>
+</div>
+
+<div class="card">
+<div class="label">NETWORK</div>
+<div class="value" id="network">—</div>
+</div>
+
+<div class="card">
+<div class="label">THREATS</div>
+<div class="value" id="threats">—</div>
+</div>
+
+<div class="card">
+<div class="label">RISK</div>
+<div class="value green" id="risk">LOW</div>
+</div>
+
+</div>
+
+<div class="content">
+
+<div class="panel">
+<h2>Endpoint Scanner</h2>
+<button onclick="scan()">Run Full Scan</button>
+<div id="activity">Ready.</div>
+</div>
+
+<div class="panel">
+<h2>Recent Alerts</h2>
+
+<table>
+<thead>
+<tr>
+<th>TYPE</th>
+<th>SEVERITY</th>
+<th>RISK</th>
+<th>PROCESS</th>
+</tr>
+</thead>
+
+<tbody id="alerts">
+<tr><td colspan="4">Loading...</td></tr>
+</tbody>
+</table>
+
+</div>
+
+<div class="panel">
+<h2>Live Processes</h2>
+
+<table>
+<thead>
+<tr>
+<th>PID</th>
+<th>PROCESS</th>
+<th>USER</th>
+</tr>
+</thead>
+
+<tbody id="processTable"></tbody>
+</table>
+
+</div>
+
+<div class="panel">
+<h2>Network Connections</h2>
+
+<table>
+<thead>
+<tr>
+<th>PID</th>
+<th>PROCESS</th>
+<th>REMOTE</th>
+<th>STATUS</th>
+</tr>
+</thead>
+
+<tbody id="networkTable"></tbody>
+</table>
+
+</div>
+
+</div>
+</main>
+</div>
+
+<script>
+
+async function loadData(){
+
+const p=await fetch("/processes").then(r=>r.json());
+const n=await fetch("/network").then(r=>r.json());
+const a=await fetch("/alerts").then(r=>r.json());
+
+document.getElementById("processes").textContent=p.length;
+document.getElementById("network").textContent=n.length;
+document.getElementById("threats").textContent=a.length;
+
+document.getElementById("processTable").innerHTML=
+p.slice(0,15).map(x=>`
+<tr>
+<td>${x.pid??"-"}</td>
+<td class="blue">${x.name??"Unknown"}</td>
+<td>${x.username??"-"}</td>
+</tr>`).join("");
+
+document.getElementById("networkTable").innerHTML=
+n.filter(x=>x.remote).slice(0,15).map(x=>`
+<tr>
+<td>${x.pid??"-"}</td>
+<td>${x.process??"Unknown"}</td>
+<td>${x.remote}</td>
+<td>${x.status}</td>
+</tr>`).join("");
+
+document.getElementById("alerts").innerHTML=
+a.slice(0,10).map(x=>`
+<tr>
+<td>${x[1]}</td>
+<td class="red">${x[2]}</td>
+<td>${x[3]}</td>
+<td>${x[5]??"-"}</td>
+</tr>`).join("") ||
+"<tr><td colspan='4'>No alerts</td></tr>";
+
+}
+
+async function scan(){
+
+document.getElementById("activity").textContent=
+"Running full endpoint scan...";
+
+const r=await fetch("/scan");
+const d=await r.json();
+
+document.getElementById("processes").textContent=d.processes_scanned;
+document.getElementById("network").textContent=d.connections_scanned;
+document.getElementById("threats").textContent=d.alerts_detected;
+
+const risk=document.getElementById("risk");
+
+if(d.alerts_detected>0){
+risk.textContent="HIGH";
+risk.className="value red";
+}else{
+risk.textContent="LOW";
+risk.className="value green";
+}
+
+document.getElementById("activity").textContent=
+"Scan complete.";
+
+loadData();
+}
+
+loadData();
+
+setInterval(loadData,10000);
+
+</script>
+
+</body>
+</html>
