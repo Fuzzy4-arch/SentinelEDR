@@ -1,8 +1,8 @@
 # 🛡️ SentinelEDR
 
-**SentinelEDR** is a Python-based Endpoint Detection and Response (EDR) platform designed to monitor Windows endpoints, collect security telemetry, detect suspicious activity, classify security risks, and expose endpoint information through a FastAPI web interface.
+**SentinelEDR** is a Python-based Endpoint Detection and Response (EDR) platform designed to monitor endpoint activity, identify suspicious processes and network behavior, calculate security risk, and expose security telemetry through a FastAPI-based interface.
 
-The project demonstrates practical defensive-security concepts including endpoint monitoring, rule-based threat detection, risk scoring, alert persistence, REST APIs, automated testing, and continuous integration.
+The project demonstrates practical cybersecurity engineering concepts including endpoint monitoring, threat detection, automated testing, API development, persistent alert storage, and CI/CD.
 
 ---
 
@@ -10,49 +10,53 @@ The project demonstrates practical defensive-security concepts including endpoin
 
 SentinelEDR was built to demonstrate how a lightweight endpoint security platform can:
 
-* Monitor running Windows processes
+* Monitor running processes
 * Monitor active network connections
-* Identify potentially suspicious activity
-* Assign risk levels to detected events
-* Store security alerts
-* Expose security telemetry through an API
-* Provide a web-based security dashboard
-* Automatically test detection logic through CI
+* Detect suspicious endpoint behavior
+* Identify potentially malicious processes
+* Detect suspicious network activity
+* Generate security alerts
+* Calculate endpoint risk
+* Store security events
+* Provide security telemetry through REST APIs
+* Automate testing through CI
+
+The project is intended as a **portfolio and learning project for cybersecurity / SOC / blue-team engineering**.
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-### Endpoint Monitoring
+### 🔍 Endpoint Monitoring
 
-* Live Windows process monitoring
-* Process ID, name, and user information
+* Live process enumeration
+* Process IDs and usernames
+* Process monitoring through `psutil`
 * Active network connection monitoring
-* Remote IP address, port, and connection-state visibility
+* Local and remote endpoint information
+* Endpoint security telemetry
 
-### Threat Detection
+### 🛡️ Threat Detection
 
 * Suspicious process detection
-* Suspicious PowerShell command detection
-* Suspicious executable-location detection
-* Suspicious network-port detection
-* Rule-based security detections
-* Risk-based alert classification
+* Suspicious network activity detection
+* Rule-based detection logic
+* Alert generation
+* Severity classification
+* Risk scoring
 
-### Security Platform
+### 🌐 Security API
 
-* SQLite alert storage
-* FastAPI REST API
-* Interactive endpoint security dashboard
-* Endpoint scanning
-* JSON-based API responses
+Built with **FastAPI** and provides endpoints for:
 
-### Development & Quality
-
-* Automated tests with `pytest`
-* GitHub Actions CI
-* Modular Python architecture
-* Git-based version control
+| Endpoint         | Description                           |
+| ---------------- | ------------------------------------- |
+| `GET /`          | Endpoint security dashboard           |
+| `GET /scan`      | Run endpoint security scan            |
+| `GET /processes` | Retrieve running processes            |
+| `GET /network`   | Retrieve active network connections   |
+| `GET /alerts`    | Retrieve detected security alerts     |
+| `GET /docs`      | Interactive Swagger API documentation |
 
 ---
 
@@ -60,100 +64,195 @@ SentinelEDR was built to demonstrate how a lightweight endpoint security platfor
 
 ```text
                          ┌──────────────────────┐
-                         │   Windows Endpoint   │
+                         │      Endpoint        │
+                         │   Windows System     │
                          └──────────┬───────────┘
                                     │
                      ┌──────────────┴──────────────┐
                      │                             │
-                     ▼                             ▼
-             ┌───────────────┐             ┌───────────────┐
-             │Process Monitor│             │Network Monitor│
-             └───────┬───────┘             └───────┬───────┘
+              Process Monitor              Network Monitor
                      │                             │
                      ▼                             ▼
-             ┌───────────────┐             ┌───────────────┐
-             │Process Detector│             │Network Detector│
-             └───────┬───────┘             └───────┬───────┘
+              Process Data                 Network Data
                      │                             │
                      └──────────────┬──────────────┘
-                                    ▼
-                           ┌─────────────────┐
-                           │   Alert Engine  │
-                           └────────┬────────┘
                                     │
                                     ▼
-                           ┌─────────────────┐
-                           │   Risk Engine   │
-                           └────────┬────────┘
+                         ┌──────────────────────┐
+                         │   Detection Engine   │
+                         │                      │
+                         │ Process Detector     │
+                         │ Network Detector     │
+                         └──────────┬───────────┘
                                     │
                                     ▼
-                           ┌─────────────────┐
-                           │    SQLite DB    │
-                           └────────┬────────┘
+                         ┌──────────────────────┐
+                         │    Risk Scoring      │
+                         └──────────┬───────────┘
                                     │
                                     ▼
-                           ┌─────────────────┐
-                           │    FastAPI      │
-                           │   REST API      │
-                           └────────┬────────┘
+                         ┌──────────────────────┐
+                         │   Alert Storage      │
+                         │     SQLite DB        │
+                         └──────────┬───────────┘
                                     │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+                    ▼                               ▼
+             FastAPI REST API                Security Dashboard
+                    │                               │
+                    └───────────────┬───────────────┘
                                     ▼
-                           ┌─────────────────┐
-                           │ Security        │
-                           │ Dashboard       │
-                           └─────────────────┘
+                              Security Analyst
 ```
 
 ---
 
-## 📸 Dashboard
+## 🖥️ Security Dashboard
 
-SentinelEDR provides a web-based endpoint security console for viewing endpoint status, process telemetry, network connections, detected threats, risk level, and scan results.
+SentinelEDR includes a web-based endpoint security dashboard providing visibility into endpoint telemetry.
+
+The dashboard displays:
+
+* Number of running processes
+* Network connections
+* Detected threats
+* Overall endpoint risk
+* Recent alerts
+* Live processes
+* Network connections
+* Endpoint scan status
+
+### Dashboard
 
 ![SentinelEDR Dashboard](dashboard.png)
 
 ---
 
-## 🔌 API Documentation
+## 📡 API Documentation
 
-SentinelEDR exposes its security telemetry through a FastAPI REST API with interactive Swagger/OpenAPI documentation.
+SentinelEDR exposes its functionality through a REST API using FastAPI.
+
+Interactive Swagger documentation is available at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### API Documentation
 
 ![SentinelEDR API Documentation](api-docs.png)
 
-### API Endpoints
+---
 
-| Endpoint     | Method | Purpose                         |
-| ------------ | ------ | ------------------------------- |
-| `/`          | GET    | EDR dashboard                   |
-| `/processes` | GET    | Retrieve running processes      |
-| `/network`   | GET    | Retrieve network connections    |
-| `/alerts`    | GET    | Retrieve stored security alerts |
-| `/scan`      | GET    | Run an endpoint scan            |
-| `/docs`      | GET    | Interactive API documentation   |
+## 🔎 API Endpoints
+
+### Dashboard
+
+```http
+GET /
+```
+
+Returns the SentinelEDR web dashboard.
+
+### Run Security Scan
+
+```http
+GET /scan
+```
+
+Runs an endpoint security scan and returns the scan results.
+
+### Processes
+
+```http
+GET /processes
+```
+
+Returns information about running processes.
+
+Example information includes:
+
+```text
+PID
+Process name
+Username
+```
+
+### Network
+
+```http
+GET /network
+```
+
+Returns active network connections detected on the endpoint.
+
+### Alerts
+
+```http
+GET /alerts
+```
+
+Returns security alerts generated by the detection engine.
+
+### Swagger Documentation
+
+```http
+GET /docs
+```
+
+Provides interactive API documentation generated by FastAPI.
 
 ---
 
-## 🚨 Detection Capabilities
+## 🧠 Detection Capabilities
 
-SentinelEDR currently provides rule-based detection for potentially suspicious endpoint activity.
+SentinelEDR uses rule-based detection logic to identify suspicious endpoint behavior.
 
-Examples include:
+### Process Detection
 
-* Known suspicious process names
-* Suspicious PowerShell command-line arguments
-* Executables running from temporary directories
-* Connections using suspicious ports such as `4444`, `5555`, and `1337`
-* Brute-force login activity
-* Password spraying behavior
-* Privileged login activity
+The process detection engine can evaluate endpoint processes and identify suspicious characteristics.
 
-Detected events can be classified according to their calculated security risk.
+Example detection categories include:
+
+* Suspicious process names
+* Unexpected processes
+* Potentially malicious processes
+* Elevated or unusual process activity
+
+### Network Detection
+
+The network detection engine analyzes active connections for suspicious characteristics.
+
+Potential detection signals include:
+
+* Suspicious remote connections
+* Unexpected network activity
+* Unusual connection patterns
+* Potentially risky endpoints
+
+---
+
+## ⚠️ Risk Scoring
+
+Detected activity can contribute to an overall endpoint risk assessment.
+
+Example risk levels:
+
+```text
+LOW
+MEDIUM
+HIGH
+CRITICAL
+```
+
+The risk level can be used to prioritize security investigation.
 
 ---
 
 ## 🧪 Testing
 
-Detection logic is tested using `pytest`.
+SentinelEDR includes automated tests using `pytest`.
 
 Run the test suite:
 
@@ -161,24 +260,43 @@ Run the test suite:
 py -m pytest -v
 ```
 
-The project includes automated tests covering detection behavior such as:
+Tests cover detection functionality and help ensure that changes do not break existing security logic.
 
-* Brute-force detection
-* Password-spraying detection
-* Privileged-login detection
-* Normal-login behavior without false alerts
+Example:
+
+```text
+============================= test session starts =============================
+
+tests/test_process_detector.py
+
+PASSED
+PASSED
+PASSED
+PASSED
+
+============================== tests passed ================================
+```
 
 ---
 
 ## 🔄 Continuous Integration
 
-SentinelEDR uses **GitHub Actions** to automatically execute the test suite when changes are pushed or pull requests are created.
+The project uses **GitHub Actions** to automatically run tests when changes are pushed or pull requests are created.
+
+CI performs:
+
+1. Python environment setup
+2. Dependency installation
+3. Test execution
+4. Build validation
+
+Workflow:
 
 ```text
 Developer
     │
     ▼
- Git Push
+Git Push / Pull Request
     │
     ▼
 GitHub Actions
@@ -190,7 +308,7 @@ Install Dependencies
 Run pytest
     │
     ▼
-Tests Passed ✓
+PASS / FAIL
 ```
 
 ---
@@ -206,120 +324,217 @@ SentinelEDR/
 │
 ├── app/
 │   ├── core/
-│   │   ├── parser.py
-│   │   └── risk.py
+│   │   ├── network_monitor.py
+│   │   ├── process_monitor.py
+│   │   └── scanner.py
 │   │
 │   ├── detectors/
-│   │   ├── bruteforce.py
-│   │   └── rules.py
+│   │   ├── network_detector.py
+│   │   └── process_detector.py
 │   │
 │   ├── storage/
 │   │   └── database.py
 │   │
+│   ├── templates/
+│   │   └── dashboard.html
+│   │
 │   └── api.py
 │
 ├── tests/
-│   └── ...
+│   ├── __init__.py
+│   └── test_process_detector.py
 │
-├── main.py
+├── dashboard.png
+├── api-docs.png
 ├── README.md
 └── .gitignore
 ```
 
 ---
 
-## ⚙️ Technology Stack
+## 🛠️ Technology Stack
 
-| Technology     | Purpose                               |
-| -------------- | ------------------------------------- |
-| Python         | Core implementation                   |
-| FastAPI        | REST API and web interface            |
-| Uvicorn        | ASGI server                           |
-| psutil         | Windows process and network telemetry |
-| SQLite         | Alert persistence                     |
-| pytest         | Automated testing                     |
-| GitHub Actions | Continuous integration                |
-| Git            | Version control                       |
+| Technology     | Purpose                          |
+| -------------- | -------------------------------- |
+| Python         | Core development                 |
+| FastAPI        | REST API                         |
+| Uvicorn        | ASGI server                      |
+| psutil         | Process and network monitoring   |
+| SQLite         | Alert/event storage              |
+| Pytest         | Automated testing                |
+| Git            | Version control                  |
+| GitHub         | Source control and collaboration |
+| GitHub Actions | Continuous integration           |
+| HTML/CSS       | Security dashboard               |
 
 ---
 
-## 🚀 Running SentinelEDR
+## ▶️ Running SentinelEDR
 
-Clone the repository and enter the project directory:
+### 1. Clone the repository
 
 ```powershell
 git clone https://github.com/Fuzzy4-arch/SentinelEDR.git
+```
+
+```powershell
 cd SentinelEDR
 ```
 
-Install dependencies:
+### 2. Create a virtual environment
 
 ```powershell
-py -m pip install fastapi uvicorn psutil pytest
+py -m venv .venv
 ```
 
-Start the API server:
+### 3. Activate the environment
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 4. Install dependencies
+
+```powershell
+pip install fastapi uvicorn psutil pytest
+```
+
+### 5. Start the API server
 
 ```powershell
 py -m uvicorn app.api:app --reload
 ```
 
-Open the dashboard:
+### 6. Open the dashboard
 
 ```text
 http://127.0.0.1:8000/
 ```
 
-Open the API documentation:
+### 7. Open API documentation
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-Run the tests:
+---
 
-```powershell
-py -m pytest -v
+## 🔬 Example Workflow
+
+A typical SentinelEDR scan follows this process:
+
+```text
+Endpoint
+   │
+   ▼
+Collect Processes
+   │
+   ▼
+Collect Network Connections
+   │
+   ▼
+Run Detection Rules
+   │
+   ▼
+Generate Alerts
+   │
+   ▼
+Calculate Risk
+   │
+   ▼
+Store Results
+   │
+   ▼
+Expose Through API
+   │
+   ▼
+Display On Dashboard
 ```
 
 ---
 
 ## 🔐 Security Considerations
 
-SentinelEDR is a defensive security research and portfolio project.
+SentinelEDR is designed as a defensive security project.
 
-When publishing screenshots or telemetry publicly:
+When deploying or extending the project:
 
-* Do not expose Windows usernames
-* Do not publish sensitive endpoint information
-* Avoid exposing private network details unnecessarily
-* Do not commit credentials, API keys, tokens, or secrets
-* Keep local databases and runtime logs excluded from version control
+* Do not commit credentials
+* Do not commit API keys
+* Do not commit authentication tokens
+* Do not commit private keys
+* Do not expose sensitive endpoint information
+* Review screenshots before publishing them
+* Use environment variables for sensitive configuration
+* Restrict API access when deploying outside localhost
 
-The repository's `.gitignore` is used to prevent local runtime artifacts and sensitive environment files from being committed.
+The current implementation is intended primarily for **local testing, education, and portfolio demonstration**.
 
 ---
 
-## 📈 Future Improvements
+## 🚧 Future Improvements
 
-Potential future development includes:
+Potential improvements include:
 
-* Real-time WebSocket telemetry
-* Process-tree analysis
+* Real-time process monitoring
+* Real-time network monitoring
+* File integrity monitoring
 * Windows Event Log integration
+* Windows Defender integration
+* Process hash collection
+* VirusTotal integration
+* YARA-based detection
 * MITRE ATT&CK technique mapping
-* IOC management
-* IP/domain reputation checking
-* Alert severity dashboards
-* Authentication and role-based access control
-* Persistent endpoint agents
-* Centralized multi-endpoint monitoring
-* Advanced behavioral detection
+* Authentication and authorization
+* WebSocket-based live telemetry
+* Alert severity improvements
+* Advanced risk scoring
+* Threat investigation pages
+* Endpoint isolation capabilities
+* Multi-endpoint monitoring
+* Centralized SOC dashboard
+* Docker deployment
+* Production database support
+
+---
+
+## 🎯 Cybersecurity Skills Demonstrated
+
+This project demonstrates practical experience with:
+
+* Endpoint Detection and Response
+* Blue-team security engineering
+* Security monitoring
+* Threat detection
+* Process analysis
+* Network monitoring
+* Rule-based detection
+* Risk assessment
+* Security alerting
+* REST API development
+* Python development
+* Database integration
+* Automated testing
+* Continuous Integration
+* Git/GitHub
+* Security-focused software architecture
 
 ---
 
 ## ⚠️ Disclaimer
 
-SentinelEDR is intended for cybersecurity education, defensive security research, experimentation, and portfolio demonstration.
+SentinelEDR is an educational and portfolio project intended for authorized systems and environments.
 
-It should not be considered a production-grade EDR solution. Detection rules may produce false positives or false negatives and should be validated before use in real environments.
+It should not be considered a replacement for a production-grade EDR solution.
+
+Only use SentinelEDR on systems you own or have explicit permission to monitor.
+
+---
+
+## 👨‍💻 Project
+
+**SentinelEDR — Endpoint Detection and Response Platform**
+
+Built with Python, FastAPI, psutil, SQLite, Pytest, and GitHub Actions.
+
+**Repository:** [Fuzzy4-arch/SentinelEDR](https://github.com/Fuzzy4-arch/SentinelEDR)
