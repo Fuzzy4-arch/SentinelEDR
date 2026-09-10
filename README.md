@@ -114,14 +114,6 @@ SentinelEDR provides a web-based endpoint security console for viewing endpoint 
 
 ---
 
-## 🔍 Endpoint Scan
-
-The platform can perform an endpoint scan and report the current security state of the monitored system.
-
-![SentinelEDR Scan Result](scan-result.png)
-
----
-
 ## 🔌 API Documentation
 
 SentinelEDR exposes its security telemetry through a FastAPI REST API with interactive Swagger/OpenAPI documentation.
